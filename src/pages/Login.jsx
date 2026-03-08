@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../utils/axios";
+import api from "../utils/axios";
 import hero3 from "../assets/hero/hero3.jpg";
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
     setError("");
 
     try {
-      const { data } = await axios.post("/users/login", {
+      const { data } = await api.post("/users/login", {
         email,
         password,
       });
