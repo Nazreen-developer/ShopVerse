@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../utils/api";
+import api from "../utils/axios";
 
 import Hero from "../components/Layout/Hero";
 import BrandAds from "../components/Products/temp";

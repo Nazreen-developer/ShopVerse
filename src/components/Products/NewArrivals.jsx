@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import api from "../../utils/api";
+import api from "../../utils/axios";
 
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
