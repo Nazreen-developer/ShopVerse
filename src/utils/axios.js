@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3500/api",
+  baseURL: import.meta.env.VITE_BACKEND_URL + "/api",
 });
 
 // 🔐 Automatically attach token
