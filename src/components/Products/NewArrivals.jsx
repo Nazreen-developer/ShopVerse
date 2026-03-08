@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "../../utils/api";
 
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
@@ -11,13 +11,10 @@ const NewArrivals = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:3500/api/products"
-        );
-
+        const { data } = await api.get("/products");
         setProducts(data.slice(0, 12));
       } catch (error) {
-        console.error("Error fetching products", error);
+        console.error("Error fetching products:", error);
       }
     };
 
@@ -41,14 +38,9 @@ const NewArrivals = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 py-12 relative">
 
-      {/* TITLE + ARROWS */}
       <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold">New Arrivals</h2>
 
-        <h2 className="text-3xl center font-bold">
-          New Arrivals
-        </h2>
-
-        {/* Arrow buttons */}
         <div className="flex gap-3">
           <button
             onClick={scrollLeft}
@@ -64,10 +56,8 @@ const NewArrivals = () => {
             <ChevronRight size={22} />
           </button>
         </div>
-
       </div>
 
-      {/* PRODUCTS SCROLL CONTAINER */}
       <div
         ref={scrollRef}
         className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth"
@@ -79,15 +69,17 @@ const NewArrivals = () => {
             className="min-w-[260px] cursor-pointer bg-white rounded-lg shadow hover:shadow-lg transition duration-300"
           >
             <img
-              src={`http://localhost:3500${product.images?.[0]?.url}`}
+              src={
+                product.images?.[0]?.url
+                  ? import.meta.env.VITE_BACKEND_URL + product.images[0].url
+                  : "https://via.placeholder.com/500"
+              }
               alt={product.name}
               className="w-full h-[300px] object-cover rounded-t-lg"
             />
 
             <div className="p-4">
-              <h3 className="font-semibold text-lg">
-                {product.name}
-              </h3>
+              <h3 className="font-semibold text-lg">{product.name}</h3>
 
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-black font-bold">
@@ -101,11 +93,9 @@ const NewArrivals = () => {
                 )}
               </div>
             </div>
-
           </div>
         ))}
       </div>
-
     </section>
   );
 };

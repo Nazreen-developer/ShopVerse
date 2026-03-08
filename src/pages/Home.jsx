@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 import Hero from "../components/Layout/Hero";
 import BrandAds from "../components/Products/temp";
@@ -14,12 +14,11 @@ const Home = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+
     const fetchProducts = async () => {
       try {
 
-        const { data } = await axios.get(
-          "http://localhost:3500/api/products"
-        );
+        const { data } = await api.get("/products");
 
         setProducts(data);
 
@@ -29,6 +28,7 @@ const Home = () => {
     };
 
     fetchProducts();
+
   }, []);
 
   return (
@@ -41,8 +41,9 @@ const Home = () => {
 
       <NewArrivals />
 
-      {/* Best Seller Section */}
+      {/* Best Seller */}
       <section className="py-16 bg-[#f5f1eb]">
+
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
           Best Seller
         </h2>
@@ -52,10 +53,12 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <ProductGrid products={products.slice(0, 4)} />
         </div>
+
       </section>
 
-      {/* Top Wears for Women */}
+      {/* Top Wears */}
       <section className="py-16">
+
         <h2 className="text-4xl text-center font-bold mb-10">
           Top Wears for Women
         </h2>
@@ -63,6 +66,7 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <ProductGrid products={products.slice(4, 8)} />
         </div>
+
       </section>
 
       <FeaturesSection />
