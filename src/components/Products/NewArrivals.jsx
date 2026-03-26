@@ -3,10 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import api from "../../utils/axios";
 
+const API = import.meta.env.VITE_BACKEND_URL;
+
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+
+  /* ==========================
+     IMAGE HELPER (FIX)
+  ========================== */
+  const getImage = (product) => {
+    const img = product?.images?.[0]?.url;
+
+    if (!img) return "https://via.placeholder.com/500";
+
+    // ✅ Cloudinary / external
+    if (img.startsWith("http")) return img;
+
+    // ✅ fallback (old images)
+    return `${API}${img}`;
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -44,14 +61,14 @@ const NewArrivals = () => {
         <div className="flex gap-3">
           <button
             onClick={scrollLeft}
-            className="p-2 rounded-full border hover:bg-gray-100 transition"
+            className="p-2 rounded-full border hover:bg-gray-100"
           >
             <ChevronLeft size={22} />
           </button>
 
           <button
             onClick={scrollRight}
-            className="p-2 rounded-full border hover:bg-gray-100 transition"
+            className="p-2 rounded-full border hover:bg-gray-100"
           >
             <ChevronRight size={22} />
           </button>
@@ -66,23 +83,21 @@ const NewArrivals = () => {
           <div
             key={product._id}
             onClick={() => navigate(`/product/${product._id}`)}
-            className="min-w-[260px] cursor-pointer bg-white rounded-lg shadow hover:shadow-lg transition duration-300"
+            className="min-w-[260px] cursor-pointer bg-white rounded-lg shadow hover:shadow-lg transition"
           >
             <img
-              src={
-                product.images?.[0]?.url
-                  ? import.meta.env.VITE_BACKEND_URL + product.images[0].url
-                  : "https://via.placeholder.com/500"
-              }
+              src={getImage(product)}   // ✅ FIXED HERE
               alt={product.name}
               className="w-full h-[300px] object-cover rounded-t-lg"
             />
 
             <div className="p-4">
-              <h3 className="font-semibold text-lg">{product.name}</h3>
+              <h3 className="font-semibold text-lg">
+                {product.name}
+              </h3>
 
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-black font-bold">
+                <span className="font-bold">
                   ₹{product.discountPrice || product.price}
                 </span>
 
@@ -93,6 +108,7 @@ const NewArrivals = () => {
                 )}
               </div>
             </div>
+
           </div>
         ))}
       </div>
