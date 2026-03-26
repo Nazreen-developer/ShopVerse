@@ -35,6 +35,21 @@ const CollectionPage = () => {
     setIsSidebarOpen(prev => !prev);
   };
 
+  /* ==========================
+     IMAGE FIX (IMPORTANT)
+  ========================== */
+  const getImage = (product) => {
+    const img = product?.images?.[0]?.url;
+
+    if (!img) return "https://via.placeholder.com/500";
+
+    // ✅ Cloudinary / external
+    if (img.startsWith("http")) return img;
+
+    // ✅ fallback (old images)
+    return `${BACKEND_URL}${img}`;
+  };
+
   /* FETCH PRODUCTS */
 
   useEffect(() => {
@@ -84,71 +99,43 @@ const CollectionPage = () => {
 
     let updated = [...products];
 
-    /* FILTER BY MAIN CATEGORY (HEADER CLICK) */
-
     if (collection) {
-
       updated = updated.filter(product =>
         product.mainCategory?.toLowerCase() === collection.toLowerCase()
       );
-
     }
 
-    /* SUB CATEGORY */
-
     if (filters.category.length > 0) {
-
       updated = updated.filter(product =>
         filters.category.includes(product.subCategory)
       );
-
     }
 
-    /* BRAND */
-
     if (filters.brand.length > 0) {
-
       updated = updated.filter(product =>
         filters.brand.includes(product.brand)
       );
-
     }
 
-    /* SIZE */
-
     if (filters.size.length > 0) {
-
       updated = updated.filter(product =>
         product.sizes?.some(size => filters.size.includes(size))
       );
-
     }
 
-    /* COLOR */
-
     if (filters.color.length > 0) {
-
       updated = updated.filter(product =>
         product.colors?.some(color => filters.color.includes(color))
       );
-
     }
 
-    /* MATERIAL */
-
     if (filters.material.length > 0) {
-
       updated = updated.filter(product =>
         filters.material.includes(product.material)
       );
-
     }
 
-    /* PRICE */
-
     updated = updated.filter(product => product.price <= filters.price);
-
-    /* SORT */
 
     if (sortBy === "priceAsc") {
       updated.sort((a, b) => a.price - b.price);
@@ -167,10 +154,7 @@ const CollectionPage = () => {
 
     <div className="min-h-screen bg-[#f5f1eb]">
 
-      {/* MOBILE FILTER BUTTON */}
-
       <div className="lg:hidden p-4">
-
         <button
           onClick={toggleSidebar}
           className="flex items-center gap-2 bg-[#6f4e37] text-white px-4 py-2 rounded shadow"
@@ -178,13 +162,9 @@ const CollectionPage = () => {
           <FaFilter />
           Filters
         </button>
-
       </div>
 
-
       <div className="flex">
-
-        {/* SIDEBAR */}
 
         <div
           ref={sidebarRef}
@@ -195,45 +175,31 @@ const CollectionPage = () => {
           lg:static lg:translate-x-0
           `}
         >
-
           <FilterSidebar
             collection={collection}
             filters={filters}
             setFilters={setFilters}
             closeSidebar={() => setIsSidebarOpen(false)}
           />
-
         </div>
-
 
         {isSidebarOpen && (
           <div className="fixed inset-0 bg-black/40 z-40 lg:hidden"></div>
         )}
 
-
-        {/* PRODUCTS */}
-
         <div className="flex-1 p-6">
 
           <div className="flex justify-between items-center mb-4">
-
             <h2 className="text-2xl font-semibold uppercase text-[#6f4e37]">
-
               {collection ? collection : "All Collection"}
-
             </h2>
-
             <SortOptions />
-
           </div>
-
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
 
             {filteredProducts.length === 0 ? (
-
               <p>No products found</p>
-
             ) : (
 
               filteredProducts.map(product => (
@@ -245,13 +211,12 @@ const CollectionPage = () => {
                 >
 
                   <img
-                    src={`${BACKEND_URL}${product.images?.[0]?.url}`}
+                    src={getImage(product)}   // ✅ FIXED HERE
                     alt={product.name}
                     className="w-full h-60 object-cover rounded-t-lg"
                   />
 
                   <div className="p-3">
-
                     <h3 className="text-sm font-medium truncate">
                       {product.name}
                     </h3>
@@ -263,7 +228,6 @@ const CollectionPage = () => {
                     <p className="text-xs text-gray-500 mt-1">
                       {product.brand}
                     </p>
-
                   </div>
 
                 </div>
