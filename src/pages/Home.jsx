@@ -10,63 +10,35 @@ import FeaturesSection from "../components/Products/FeaturesSection";
 import ProductGrid from "../components/Products/ProductGrid";
 
 const Home = () => {
-
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-
     const fetchProducts = async () => {
-      try {
-
-        const { data } = await api.get("/products");
-
-        setProducts(data);
-
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
+      const { data } = await api.get("/products");
+      setProducts(data);
     };
-
     fetchProducts();
-
   }, []);
 
   return (
     <>
       <Hero />
-
       <BrandAds />
-
       <GenderCollectionSection />
-
       <NewArrivals />
 
-      {/* Best Seller */}
       <section className="py-16 bg-[#f5f1eb]">
-
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+        <h2 className="text-4xl font-bold text-center mb-12">
           Best Seller
         </h2>
 
-        <ProductDetails />
+        {products.length > 0 && (
+          <ProductDetails productId={products[0]._id} />
+        )}
 
         <div className="container mx-auto px-6">
           <ProductGrid products={products.slice(0, 4)} />
         </div>
-
-      </section>
-
-      {/* Top Wears */}
-      <section className="py-16">
-
-        <h2 className="text-4xl text-center font-bold mb-10">
-          Top Wears for Women
-        </h2>
-
-        <div className="container mx-auto px-6">
-          <ProductGrid products={products.slice(4, 8)} />
-        </div>
-
       </section>
 
       <FeaturesSection />
