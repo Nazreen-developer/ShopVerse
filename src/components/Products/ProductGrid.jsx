@@ -1,6 +1,22 @@
 import { Link } from "react-router-dom";
 
+const API = import.meta.env.VITE_BACKEND_URL;
+
 const ProductGrid = ({ products }) => {
+  const getImage = (product) => {
+    const img = product.images?.[0]?.url;
+
+    if (!img) return "https://via.placeholder.com/500";
+
+    // Cloudinary or external image
+    if (img.startsWith("http")) {
+      return img;
+    }
+
+    // Local upload
+    return `${API}${img}`;
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
       {products.map((product) => (
@@ -13,11 +29,7 @@ const ProductGrid = ({ products }) => {
 
             <div className="relative w-full h-80 overflow-hidden rounded-xl">
               <img
-                src={
-                  product.images?.[0]?.url
-                    ? import.meta.env.VITE_BACKEND_URL + product.images[0].url
-                    : "https://via.placeholder.com/500"
-                }
+                src={getImage(product)}
                 alt={product.name}
                 className="w-full h-full object-cover transition duration-500 group-hover:scale-110"
               />
